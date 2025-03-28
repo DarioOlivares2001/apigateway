@@ -4,38 +4,75 @@ spring:
   cloud:
     gateway:
       routes:
-        # Rutas para el microservicio de pacientes
-        - id: micro-pacientes
-          uri: http://34.237.99.92:8080/
+        # Ruta para obtener usuarios (GET)
+        - id: usuarios-get
+          uri: https://funcusuario.azurewebsites.net/api/Usuarios
           predicates:
-            - Path=/api/pacientes/**
-        # Rutas para el microservicio de alertas
-        - id: micro-alertas
-          uri: http://34.237.99.92:8080/
+            - Path=/api/usuarios/**
+            - Method=GET
+
+        # Ruta para crear usuario (POST)
+        - id: usuarios-post
+          uri: https://funcusuario.azurewebsites.net/api/Usuarios
           predicates:
-            - Path=/api/alertas/**
-        # Rutas para el microservicio de señales vitales
-        - id: micro-senales-vitales
-          uri: http://34.237.99.92:8080/
+            - Path=/api/usuarios
+            - Method=POST
+
+        # Ruta para actualizar usuario (PUT)
+        - id: usuarios-put
+          uri: https://funcusuario.azurewebsites.net/api/Usuarios
           predicates:
-            - Path=/api/senales-vitales/**
-        - id: micro-signos
-          uri: http://52.20.247.67:8080/
+            - Path=/api/usuarios
+            - Method=PUT
+
+        # Ruta para eliminar usuario (DELETE)
+        - id: usuarios-delete
+          uri: https://funcusuario.azurewebsites.net/api/Usuarios
           predicates:
-            - Path=/api/sign/**
-          
-    globalcors:
-      corsConfigurations:
-        '[/**]':
-          allowedOrigins: "http://localhost:4200"  # Ajusta esto según el origen de tu frontend
-          allowedMethods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          allowedHeaders: "*"
-          allowCredentials: true
+            - Path=/api/usuarios
+            - Method=DELETE
+
+        # Ruta para obtener roles (GET)
+        - id: roles-get
+          uri: https://funcionroles.azurewebsites.net/api/Roles
+          predicates:
+            - Path=/api/roles/**
+            - Method=GET
+
+        # Ruta para crear rol (POST)
+        - id: roles-post
+          uri: https://funcionroles.azurewebsites.net/api/Roles
+          predicates:
+            - Path=/api/roles
+            - Method=POST
+
+        # Ruta para actualizar rol (PUT)
+        - id: roles-put
+          uri: https://funcionroles.azurewebsites.net/api/Roles
+          predicates:
+            - Path=/api/roles
+            - Method=PUT
+
+        # Ruta para eliminar rol (DELETE)
+        - id: roles-delete
+          uri: https://funcionroles.azurewebsites.net/api/Roles
+          predicates:
+            - Path=/api/roles
+            - Method=DELETE
+
+
+  globalcors:
+    corsConfigurations:
+      '[/**]':
+        allowedOrigins: "http://localhost:4200"
+        allowedMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        allowedHeaders: "*"
+        allowCredentials: true
 
 logging:
   level:
