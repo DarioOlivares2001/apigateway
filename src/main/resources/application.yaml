@@ -60,6 +60,26 @@ spring:
             - Path=/api/roles
             - Method=DELETE
 
+        # Ruta GraphQL para usuarios
+        - id: graphql-usuarios
+          uri: https://usuariographfunction.azurewebsites.net
+          predicates: 
+            - Path=/api/graphql/usuarios
+            - Method=POST
+          filters:
+            - RewritePath=/api/graphql/usuarios, /api/UsuariosGraphQL
+
+        # Ruta GraphQL para roles
+        - id: graphql-roles
+          uri: https://rolgraphfunction.azurewebsites.net
+          predicates:
+            - Path=/api/graphql/roles
+            - Method=POST
+          filters:
+            - RewritePath=/api/graphql/roles, /api/RolesGraphQL
+
+
+
 
   globalcors:
     corsConfigurations:
