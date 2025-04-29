@@ -4,82 +4,41 @@ spring:
   cloud:
     gateway:
       routes:
-        # Ruta para obtener usuarios (GET)
-        - id: usuarios-get
-          uri: https://funcusuario.azurewebsites.net/api/Usuarios
-          predicates:
-            - Path=/api/usuarios/**
-            - Method=GET
-
-        # Ruta para crear usuario (POST)
-        - id: usuarios-post
-          uri: https://funcusuario.azurewebsites.net/api/Usuarios
+        # === PRODUCTOR USUARIOS (POST al Event Grid) ===
+        - id: productor-usuarios
+          uri: https://productorusuarios.azurewebsites.net
           predicates:
             - Path=/api/usuarios
             - Method=POST
+          filters:
+            - RewritePath=/api/usuarios, /api/ProductorUsuarios
 
-        # Ruta para actualizar usuario (PUT)
-        - id: usuarios-put
-          uri: https://funcusuario.azurewebsites.net/api/Usuarios
+        # === CONSULTA USUARIOS (GraphQL) ===
+        - id: consulta-usuarios
+          uri: https://funcusuario.azurewebsites.net
           predicates:
-            - Path=/api/usuarios
-            - Method=PUT
-
-        # Ruta para eliminar usuario (DELETE)
-        - id: usuarios-delete
-          uri: https://funcusuario.azurewebsites.net/api/Usuarios
-          predicates:
-            - Path=/api/usuarios
-            - Method=DELETE
-
-        # Ruta para obtener roles (GET)
-        - id: roles-get
-          uri: https://funcionroles.azurewebsites.net/api/Roles
-          predicates:
-            - Path=/api/roles/**
-            - Method=GET
-
-        # Ruta para crear rol (POST)
-        - id: roles-post
-          uri: https://funcionroles.azurewebsites.net/api/Roles
-          predicates:
-            - Path=/api/roles
-            - Method=POST
-
-        # Ruta para actualizar rol (PUT)
-        - id: roles-put
-          uri: https://funcionroles.azurewebsites.net/api/Roles
-          predicates:
-            - Path=/api/roles
-            - Method=PUT
-
-        # Ruta para eliminar rol (DELETE)
-        - id: roles-delete
-          uri: https://funcionroles.azurewebsites.net/api/Roles
-          predicates:
-            - Path=/api/roles
-            - Method=DELETE
-
-        # Ruta GraphQL para usuarios
-        - id: graphql-usuarios
-          uri: https://usuariographfunction.azurewebsites.net
-          predicates: 
             - Path=/api/graphql/usuarios
             - Method=POST
           filters:
-            - RewritePath=/api/graphql/usuarios, /api/UsuariosGraphQL
+            - RewritePath=/api/graphql/usuarios, /api/ConsultaUsuarios
 
-        # Ruta GraphQL para roles
-        - id: graphql-roles
-          uri: https://rolgraphfunction.azurewebsites.net
+        # === PRODUCTOR ROLES (POST al Event Grid) ===
+        - id: productor-roles
+          uri: https://productorusuarios.azurewebsites.net
+          predicates:
+            - Path=/api/roles
+            - Method=POST
+          filters:
+            - RewritePath=/api/roles, /api/ProductorRoles
+
+        # === CONSULTA ROLES (GraphQL) ===
+        - id: consulta-roles
+          uri: https://funcionroles.azurewebsites.net
           predicates:
             - Path=/api/graphql/roles
             - Method=POST
           filters:
-            - RewritePath=/api/graphql/roles, /api/RolesGraphQL
-
-
-
+            - RewritePath=/api/graphql/roles, /api/ConsultaRoles
 
   globalcors:
     corsConfigurations:
