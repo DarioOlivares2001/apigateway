@@ -1,57 +1,146 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: apigateway
+
   cloud:
     gateway:
       routes:
-        # === PRODUCTOR USUARIOS (POST al Event Grid) ===
-        - id: productor-usuarios
-          uri: https://productorusuarios.azurewebsites.net
-          predicates:
-            - Path=/api/usuarios
-            - Method=POST
-          filters:
-            - RewritePath=/api/usuarios, /api/ProductorUsuarios
 
-        # === CONSULTA USUARIOS (GraphQL) ===
-        - id: consulta-usuarios
-          uri: https://funcusuario.azurewebsites.net
+        # -----------------------
+        # USUARIO SERVICE
+        # -----------------------
+        - id: user-habilidades
+          uri: http://54.90.98.100:8080
           predicates:
-            - Path=/api/graphql/usuarios
-            - Method=POST
+            - Path=/api/habilidades/**
           filters:
-            - RewritePath=/api/graphql/usuarios, /api/ConsultaUsuarios
+            - RewritePath=/api/habilidades/(?<remaining>.*), /api/habilidades/${remaining}
 
-        # === PRODUCTOR ROLES (POST al Event Grid) ===
-        - id: productor-roles
-          uri: https://productorusuarios.azurewebsites.net
+        - id: user-perfil-empresa
+          uri: http://54.90.98.100:8080
           predicates:
-            - Path=/api/roles
-            - Method=POST
+            - Path=/api/usuarios/{userId}/perfil-empresa/**
           filters:
-            - RewritePath=/api/roles, /api/ProductorRoles
+            - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-empresa/(?<remaining>.*), /api/usuarios/${userId}/perfil-empresa/${remaining}
 
-        # === CONSULTA ROLES (GraphQL) ===
-        - id: consulta-roles
-          uri: https://funcionroles.azurewebsites.net
+        - id: user-perfil-profesional
+          uri: http://54.90.98.100:8080
           predicates:
-            - Path=/api/graphql/roles
-            - Method=POST
+            - Path=/api/usuarios/{userId}/perfil-profesional/**
           filters:
-            - RewritePath=/api/graphql/roles, /api/ConsultaRoles
+            - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/(?<remaining>.*), /api/usuarios/${userId}/perfil-profesional/${remaining}
 
-  globalcors:
-    corsConfigurations:
-      '[/**]':
-        allowedOrigins: "http://localhost:4200"
-        allowedMethods:
-          - GET
-          - POST
-          - PUT
-          - DELETE
-          - OPTIONS
-        allowedHeaders: "*"
-        allowCredentials: true
+        - id: user-perfil-profesional-completo
+          uri: http://54.90.98.100:8080
+          predicates:
+            - Path=/api/usuarios/{userId}/perfil-profesional/completo
+          filters:
+            - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/completo, /api/usuarios/${userId}/perfil-profesional/completo
+
+        - id: user-perfil-estudios
+          uri: http://54.90.98.100:8080
+          predicates:
+            - Path=/api/usuarios/{userId}/perfil-profesional/estudios/**
+          filters:
+            - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/estudios/(?<remaining>.*), /api/usuarios/${userId}/perfil-profesional/estudios/${remaining}
+
+        - id: user-perfil-experiencias
+          uri: http://54.90.98.100:8080
+          predicates:
+            - Path=/api/usuarios/{userId}/perfil-profesional/experiencias/**
+          filters:
+            - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/experiencias/(?<remaining>.*), /api/usuarios/${userId}/perfil-profesional/experiencias/${remaining}
+
+        - id: user-usuarios
+          uri: http://54.90.98.100:8080
+          predicates:
+            - Path=/api/usuarios/**
+          filters:
+            - RewritePath=/api/usuarios/(?<remaining>.*), /api/usuarios/${remaining}
+
+        - id: user-usuario-habilidades
+          uri: http://54.90.98.100:8080
+          predicates:
+            - Path=/api/usuario-habilidades/**
+          filters:
+            - RewritePath=/api/usuario-habilidades/(?<remaining>.*), /api/usuario-habilidades/${remaining}
+
+        # -----------------------
+        # JOB SERVICE
+        # -----------------------
+        - id: job-jobs
+          uri: http://52.207.17.209:8080
+          predicates:
+            - Path=/api/jobs/**
+          filters:
+            - RewritePath=/api/jobs/(?<remaining>.*), /api/jobs/${remaining}
+
+        - id: job-match
+          uri: http://52.207.17.209:8080
+          predicates:
+            - Path=/api/match/**
+          filters:
+            - RewritePath=/api/match/(?<remaining>.*), /api/match/${remaining}
+
+        - id: job-postulaciones
+          uri: http://52.207.17.209:8080
+          predicates:
+            - Path=/api/postulaciones/**
+          filters:
+            - RewritePath=/api/postulaciones/(?<remaining>.*), /api/postulaciones/${remaining}
+
+        # -----------------------
+        # CHAT SERVICE
+        # -----------------------
+        - id: chat-messages
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/api/messages/**
+          filters:
+            - RewritePath=/api/messages/(?<remaining>.*), /api/messages/${remaining}
+
+        - id: chat-conversations
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/api/messages/conversations/{userId}
+          filters:
+            - RewritePath=/api/messages/conversations/(?<userId>.*), /api/messages/conversations/${userId}
+
+        - id: chat-unread-count
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/messages/unread/count/{userId}
+          filters:
+            - RewritePath=/messages/unread/count/(?<userId>.*), /messages/unread/count/${userId}
+
+        - id: chat-unread-by-sender
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/messages/unread/by-sender/{userId}
+          filters:
+            - RewritePath=/messages/unread/by-sender/(?<userId>.*), /messages/unread/by-sender/${userId}
+
+        - id: chat-seen
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/messages/{senderId}/{receiverId}/seen
+            - Method=PUT
+          filters:
+            - RewritePath=/messages/(?<senderId>[^/]+)/(?<receiverId>[^/]+)/seen, /messages/${senderId}/${receiverId}/seen
+
+        - id: chat-ws
+          uri: ws://34.193.228.160:8080
+          predicates:
+            - Path=/ws/**
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://cognito-idp.us-east-1.amazonaws.com/us-east-1_A8wisq7iK
 
 logging:
   level:
