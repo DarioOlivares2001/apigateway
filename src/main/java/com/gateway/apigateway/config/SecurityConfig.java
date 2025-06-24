@@ -25,13 +25,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeExchange(ex -> ex
 
-                    // ---------- PRE-FLIGHT ----------
+                    
                     .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                    // ---------- WEBSOCKET ----------
+                   
                     .pathMatchers(HttpMethod.GET, "/ws/**").permitAll()
 
-                    // ---------- ENDPOINTS PÚBLICOS ----------
+                   
                     .pathMatchers(HttpMethod.POST,
                         "/api/usuarios/register",
                         "/api/usuarios/login",
@@ -42,17 +42,15 @@ public class SecurityConfig {
                         "/api/jobs/**",
                         "/api/match/**",
                         "/api/postulaciones/**",
-                        "/api/usuario-habilidades/**",      // ← habilidades públicas
-                        "/api/messages/**",                          // ← AGREGADO
-                        "/messages/unread/count/**",                 // ← AGREGADO
+                        "/api/usuario-habilidades/**",     
+                        "/api/messages/**",                          
+                        "/messages/unread/count/**",                 
                         "/messages/unread/by-sender/**"   
                     ).permitAll()
 
                     .pathMatchers(HttpMethod.PUT,
                         "/messages/*/*/seen"
                     ).permitAll()
-
-                    // ---------- TODO LO DEMÁS REQUIERE JWT ----------
                     .anyExchange().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
