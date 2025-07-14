@@ -35,7 +35,8 @@ public class SecurityConfig {
                     .pathMatchers(HttpMethod.POST,
                         "/api/usuarios/register",
                         "/api/usuarios/login",
-                        "/api/usuarios/confirm"
+                        "/api/usuarios/confirm",
+                        "/api/usuarios/sync"
                     ).permitAll()
 
                     .pathMatchers(HttpMethod.GET,
@@ -43,13 +44,10 @@ public class SecurityConfig {
                         "/api/match/**",
                         "/api/postulaciones/**",
                         "/api/usuario-habilidades/**",     
-                        "/api/messages/**",                          
-                        "/messages/unread/count/**",                 
-                        "/messages/unread/by-sender/**"   
+                        "/api/messages/**"
                     ).permitAll()
-
                     .pathMatchers(HttpMethod.PUT,
-                        "/messages/*/*/seen"
+                        "/api/messages/*/*/seen"  
                     ).permitAll()
                     .anyExchange().authenticated()
                 )
@@ -60,7 +58,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
-       cfg.setAllowedOrigins(List.of("http://localhost:4200","https://matchwork.vercel.app","https://matchwork-three.vercel.app"));
+       cfg.setAllowedOriginPatterns(List.of("https://*.vercel.app", "http://localhost:4200"));
        cfg.addAllowedOriginPattern("https://*.vercel.app");
         cfg.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         cfg.setAllowedHeaders(List.of("*"));

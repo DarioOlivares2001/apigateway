@@ -13,56 +13,56 @@ spring:
         # USUARIO SERVICE
         # -----------------------
         - id: user-habilidades
-          uri: http://´localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/habilidades/**
           filters:
             - RewritePath=/api/habilidades/(?<remaining>.*), /api/habilidades/${remaining}
 
         - id: user-perfil-empresa
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuarios/{userId}/perfil-empresa/**
           filters:
             - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-empresa/(?<remaining>.*), /api/usuarios/${userId}/perfil-empresa/${remaining}
 
         - id: user-perfil-profesional
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuarios/{userId}/perfil-profesional/**
           filters:
             - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/(?<remaining>.*), /api/usuarios/${userId}/perfil-profesional/${remaining}
 
         - id: user-perfil-profesional-completo
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuarios/{userId}/perfil-profesional/completo
           filters:
             - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/completo, /api/usuarios/${userId}/perfil-profesional/completo
 
         - id: user-perfil-estudios
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuarios/{userId}/perfil-profesional/estudios/**
           filters:
             - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/estudios/(?<remaining>.*), /api/usuarios/${userId}/perfil-profesional/estudios/${remaining}
 
         - id: user-perfil-experiencias
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuarios/{userId}/perfil-profesional/experiencias/**
           filters:
             - RewritePath=/api/usuarios/(?<userId>[^/]+)/perfil-profesional/experiencias/(?<remaining>.*), /api/usuarios/${userId}/perfil-profesional/experiencias/${remaining}
 
         - id: user-usuarios
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuarios/**
           filters:
             - RewritePath=/api/usuarios/(?<remaining>.*), /api/usuarios/${remaining}
 
         - id: user-usuario-habilidades
-          uri: http://localhost:8081
+          uri: http://54.90.98.100:8080
           predicates:
             - Path=/api/usuario-habilidades/**
           filters:
@@ -72,21 +72,21 @@ spring:
         # JOB SERVICE
         # -----------------------
         - id: job-jobs
-          uri: http://localhost:8082
+          uri: http://52.207.17.209:8080
           predicates:
             - Path=/api/jobs/**
           filters:
             - RewritePath=/api/jobs/(?<remaining>.*), /api/jobs/${remaining}
 
         - id: job-match
-          uri: http://localhost:8082
+          uri: http://52.207.17.209:8080
           predicates:
             - Path=/api/match/**
           filters:
             - RewritePath=/api/match/(?<remaining>.*), /api/match/${remaining}
 
         - id: job-postulaciones
-          uri: http://localhost:8082
+          uri: http://52.207.17.209:8080
           predicates:
             - Path=/api/postulaciones/**
           filters:
@@ -95,15 +95,44 @@ spring:
         # -----------------------
         # CHAT SERVICE
         # -----------------------
-        - id: chat-service
-          uri: http://localhost:8083
+        - id: chat-messages
+          uri: http://34.193.228.160:8080
           predicates:
             - Path=/api/messages/**
           filters:
             - RewritePath=/api/messages/(?<remaining>.*), /api/messages/${remaining}
 
+        - id: chat-conversations
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/api/messages/conversations/{userId}
+          filters:
+            - RewritePath=/api/messages/conversations/(?<userId>.*), /api/messages/conversations/${userId}
+
+        - id: chat-unread-count
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/messages/unread/count/{userId}
+          filters:
+            - RewritePath=/messages/unread/count/(?<userId>.*), /messages/unread/count/${userId}
+
+        - id: chat-unread-by-sender
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/messages/unread/by-sender/{userId}
+          filters:
+            - RewritePath=/messages/unread/by-sender/(?<userId>.*), /messages/unread/by-sender/${userId}
+
+        - id: chat-seen
+          uri: http://34.193.228.160:8080
+          predicates:
+            - Path=/messages/{senderId}/{receiverId}/seen
+            - Method=PUT
+          filters:
+            - RewritePath=/messages/(?<senderId>[^/]+)/(?<receiverId>[^/]+)/seen, /messages/${senderId}/${receiverId}/seen
+
         - id: chat-ws
-          uri: ws://localhost:8083
+          uri: ws://34.193.228.160:8080
           predicates:
             - Path=/ws/**
 
